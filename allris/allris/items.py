@@ -8,6 +8,17 @@
 import scrapy
 
 
-class AllrisItem(scrapy.Item):
+class VoItem(scrapy.Item):
     # define the fields for your item here like:
-    title = scrapy.Field()
+    id = scrapy.Field()
+    type = scrapy.Field()
+    body = scrapy.Field()
+    name = scrapy.Field()
+    reference = scrapy.Field()
+    publishedDate = scrapy.Field()
+    paperType = scrapy.Field()
+    mainFile = scrapy.Field()
+    location = scrapy.Field()
+    originator = scrapy.Field()
+    consultation = scrapy.Field()
+    modified = scrapy.Field()

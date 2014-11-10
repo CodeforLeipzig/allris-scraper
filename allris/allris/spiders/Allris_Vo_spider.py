@@ -1,5 +1,5 @@
 import scrapy
-from allris.items import AllrisItem
+from allris.items import VoItem
 
 
 class Allris_Vo_spider(scrapy.Spider):
@@ -10,8 +10,7 @@ class Allris_Vo_spider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for sel in response.xpath('//tbody/tr/td'):
-            vo = sel.xpath('form/text()').extract()
-            desc = sel.xpath('a/text()').extract()
-            link = sel.xpath('a/@href').extract()
-            print(vo, link, desc)
+        for sel in response.xpath('//tbody/tr'):
+            item = VoItem()
+            item['location'] = sel.xpath('td/a/@href').extract()
+            yield item
