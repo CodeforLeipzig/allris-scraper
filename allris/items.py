@@ -17,6 +17,7 @@ class VoItem(scrapy.Item):
     reference = scrapy.Field()
     publishedDate = scrapy.Field()
     paperType = scrapy.Field()
+    relatedPaper = scrapy.Field()
     mainFile = scrapy.Field()
     location = scrapy.Field()
     originator = scrapy.Field()

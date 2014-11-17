@@ -8,10 +8,15 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
+# LOG_LEVEL = 'WARNING'
+LOG_LEVEL = 'ERROR'
 BOT_NAME = 'Allris scraper'
 
 SPIDER_MODULES = ['allris.spiders']
 NEWSPIDER_MODULE = 'allris.spiders'
-USER_AGENT = 'Allris Scraper - OK Lab Leipzig (+http://codefor.de/leipzig/)'
+ITEM_PIPELINES = {
+    'allris.pipelines.AllrisPipeline': 100,
+    'allris.pipelines.JsonExportPipeline': 200,
+}
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'allris (+http://www.yourdomain.com)'
+USER_AGENT = 'Allris Scraper - OK Lab Leipzig (+http://codefor.de/leipzig/)'
