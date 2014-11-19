@@ -4,7 +4,7 @@ Scrapping data from [ratsinfo.leipzig.de](https://ratsinfo.leipzig.de/)
 
 ## Requirements
 
-* Python 3.4
+* Python 2.7
 * virtualenv (optional)
 * virtualenvwrapper (optional)
 
