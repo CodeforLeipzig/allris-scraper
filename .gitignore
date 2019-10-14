@@ -56,3 +56,6 @@ target/
 # Output data files
 *.json
 *.jl
+
+# Scrapy directory (contains cache)
+.scrapy
