@@ -52,4 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Output data files
 *.json
+*.jl

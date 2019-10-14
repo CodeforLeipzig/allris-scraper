@@ -3,23 +3,12 @@
 # Define here the models for your scraped items
 #
 # See documentation in:
-# http://doc.scrapy.org/en/latest/topics/items.html
+# https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
 
 
-class VoItem(scrapy.Item):
+class AllrisItem(scrapy.Item):
     # define the fields for your item here like:
-    id = scrapy.Field()
-    type = scrapy.Field()
-    body = scrapy.Field()
-    name = scrapy.Field()
-    reference = scrapy.Field()
-    publishedDate = scrapy.Field()
-    paperType = scrapy.Field()
-    relatedPaper = scrapy.Field()
-    mainFile = scrapy.Field()
-    location = scrapy.Field()
-    originator = scrapy.Field()
-    consultation = scrapy.Field()
-    modified = scrapy.Field()
+    # name = scrapy.Field()
+    pass
