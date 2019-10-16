@@ -10,36 +10,13 @@ class MeetingsSpider(scrapy.Spider):
     start_urls = ['https://ratsinfo.leipzig.de/bi/oparl/1.0/meetings.asp?organization=2387']
 
     def parse(self, response):
-        meetings = json.loads(response.text)['data']
+        self.logger.info('Parsing page: %s', response.url)
+        page = json.loads(response.text)
+
+        meetings = page['data']
         for meeting in meetings:
+            yield meeting
 
-            agenda_items = []
-            for agenda_item in meeting['agendaItem']:
-                item = {
-                    'id': agenda_item['id'],
-                    'type': agenda_item['type'],
-                    'number': agenda_item['number'],
-                    'name': agenda_item['name']
-                }
-                agenda_items.append(item)
-
-            # TODO move to pipeline
-            meeting['web'] = self.fix_web_link(meeting)
-
-            yield {
-                'id': meeting['id'],
-                'type': meeting['type'],
-                'name': meeting['name'],
-                'organization': meeting['organization'],
-                'start': meeting['start'],
-                'end': meeting['end'],
-                'web': meeting['web'],
-                'created': meeting['created'],
-                'modified': meeting['modified'],
-                'agendaItem': agenda_items
-            }
-
-    def fix_web_link(self, meeting):
-        partial = meeting['web']
-        base_url = 'https://ratsinfo.leipzig.de/bi/'
-        return re.sub('N/A', base_url, partial)
+        next_url = page['links'].get('next')
+        if next_url is not None:
+            yield scrapy.Request(url=next_url, callback=self.parse)
