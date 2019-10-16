@@ -14,6 +14,8 @@ BOT_NAME = 'allris'
 SPIDER_MODULES = ['allris.spiders']
 NEWSPIDER_MODULE = 'allris.spiders'
 
+LOG_LEVEL='INFO'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Allris Scraper - OK Lab Leipzig (+http://codefor.de/leipzig/)'
