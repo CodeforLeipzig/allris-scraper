@@ -20,5 +20,8 @@ class MeetingsSpider(scrapy.Spider):
             yield meeting
 
         next_url = page['links'].get('next')
-        if next_url is not None:
+        if next_url is None:
+            self.last_url = response.url
+        else:
             yield scrapy.Request(url=next_url, callback=self.parse)
+
