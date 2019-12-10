@@ -18,16 +18,15 @@ def spider_closed(spider, reason):
     last_url = getattr(spider, 'last_url', '')
     scraperwiki.sql.save_var('last_url', last_url)
 
-def get_last_url():
-    last_url = scraperwiki.sql.get_var('last_url')
-    if last_url is None:
-        last_url = 'https://ratsinfo.leipzig.de/bi/oparl/1.0/meetings.asp?body=2387&p=100'
-    return last_url
+def get_start_url():
+    start_url = 'https://ratsinfo.leipzig.de/bi/oparl/1.0/meetings.asp?body=2387&p=100'        
+    start_url = os.getenv('MORPH_START_URL') or scraperwiki.sql.get_var('last_url')
+    return start_url
 
 def setup():
     settings = { 'HTTPCACHE_ENABLED': True, 'LOG_LEVEL': 'INFO'}
     process = CrawlerProcess(settings)
-    process.crawl(MeetingsSpider, start_url=get_last_url())
+    process.crawl(MeetingsSpider, start_url=get_start_url())
     for p in process.crawlers:
         p.signals.connect(item_scraped, signal=scrapy.signals.item_scraped)
         p.signals.connect(spider_closed, signal=scrapy.signals.spider_closed)
