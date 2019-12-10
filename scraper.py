@@ -9,7 +9,7 @@ from allris.spiders.meetings import MeetingsSpider
 
 def item_scraped(item, response, spider):
     record = dict((k, item[k]) for k in ('id', 'name', 'start', 'end', 'web'))
-    scraperwiki.sql.save(['id'], record)
+    scraperwiki.sql.save(['id'], record, table_name='data')
 
 def spider_closed(spider, reason):
     # close pending transactions
