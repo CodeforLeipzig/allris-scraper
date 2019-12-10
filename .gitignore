@@ -3,5 +3,6 @@ __pycache__/
 .venv
 *.json
 *.jl
+*.sqlite
 .scrapy
 
