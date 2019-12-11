@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+import scrapy
+import json
+from furl import furl
+from datetime import datetime
+
+class OparlSpider(scrapy.Spider):
+    name = 'oparl'
+    allowed_domains = ['ratsinfo.leipzig.de']
+    object_type = 'meeting'
+
+    def __init__(self, name=None, **kwargs):
+        if 'since' not in kwargs:
+            raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
+        self.since = datetime.fromisoformat(kwargs['since'])
+        super(OparlSpider, self).__init__(name, **kwargs)
+
+    def start_requests(self):
+        url = 'https://ratsinfo.leipzig.de/bi/oparl/1.0/bodies.asp?id=2387'
+        yield scrapy.Request(url=url, callback=self.parse_body)
+
+    def parse_body(self, response):
+        self.logger.info("Parsing Body: %s" % response.url)
+        document = json.loads(response.text)
+
+        if not document.get('type') == 'https://schema.oparl.org/1.0/Body':
+            raise ValueError('Not a document of type Body: {}'.format(response.url))
+
+        list_url = self.fix_url(document[self.object_type])
+        yield scrapy.Request(url=list_url, callback=self.parse_list)
+
+    def parse_list(self, response):
+        self.logger.info("Parsing Object List: %s" % response.url)
+        document = json.loads(response.text)
+
+        for item in document['data']:
+            yield {
+                'id': item['id'],
+                'modified': item['modified']
+            }
+
+        next_url = document['links'].get('next')
+        if next_url is not None:
+            next_url = self.fix_url(next_url)
+            yield scrapy.Request(url=next_url, callback=self.parse_list)
+
+    # append modified_since parameter; pagination links fail to include it
+    def fix_url(self, url):
+        fixed = furl(url)
+        fixed.args['modified_since'] = self.since
+        return str(fixed)
