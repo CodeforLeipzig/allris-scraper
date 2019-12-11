@@ -1,0 +1,6 @@
+# whitelist of things to include in docker build context
+# see https://docs.docker.com/engine/reference/builder/#dockerignore-file
+*
+!requirements.txt
+!allris
+!leipzig.py
