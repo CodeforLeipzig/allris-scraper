@@ -13,6 +13,7 @@ BOT_NAME = 'allris'
 
 SPIDER_MODULES = ['allris.spiders']
 NEWSPIDER_MODULE = 'allris.spiders'
+COMMANDS_MODULE = 'allris.commands'
 
 LOG_LEVEL='INFO'
 
