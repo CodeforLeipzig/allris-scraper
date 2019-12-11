@@ -6,18 +6,22 @@ from datetime import datetime
 
 class OparlSpider(scrapy.Spider):
     name = 'oparl'
-    allowed_domains = ['ratsinfo.leipzig.de']
-    object_type = 'meeting'
+
+    # these must be set as kwargs to the spider
+    allowed_domains = []
+    body_url = ''
+    object_type = ''
 
     def __init__(self, name=None, **kwargs):
         if 'since' not in kwargs:
             raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
         self.since = datetime.fromisoformat(kwargs['since'])
+        if 'body_url' not in kwargs:
+            raise ValueError('Missing required argument: "body_url". Got arguments: {}'.format(kwargs))
         super(OparlSpider, self).__init__(name, **kwargs)
 
     def start_requests(self):
-        url = 'https://ratsinfo.leipzig.de/bi/oparl/1.0/bodies.asp?id=2387'
-        yield scrapy.Request(url=url, callback=self.parse_body)
+        yield scrapy.Request(url=self.body_url, callback=self.parse_body)
 
     def parse_body(self, response):
         self.logger.info("Parsing Body: %s" % response.url)
