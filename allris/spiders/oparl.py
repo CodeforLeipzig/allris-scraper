@@ -39,10 +39,7 @@ class OparlSpider(scrapy.Spider):
         document = json.loads(response.text)
 
         for item in document['data']:
-            yield {
-                'id': item['id'],
-                'modified': item['modified']
-            }
+            yield item
 
         next_url = document['links'].get('next')
         if next_url is not None:
