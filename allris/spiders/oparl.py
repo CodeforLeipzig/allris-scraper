@@ -13,6 +13,8 @@ class OparlSpider(scrapy.Spider):
     object_type = ''
 
     def __init__(self, name=None, **kwargs):
+        if 'domain' in kwargs:
+            self.allowed_domains = [kwargs['domain']]
         if 'since' not in kwargs:
             raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
         fmt_str =  r"%Y-%m-%dT%H:%M:%S" # replaces the fromisoformatm, not available in python 3.6
