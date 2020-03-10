@@ -7,7 +7,13 @@ from pathlib import Path
 settings = {
     'HTTPCACHE_ENABLED': True,
     'LOG_LEVEL': 'INFO',
+    'CLOSESPIDER_PAGECOUNT': 2,
+    'ITEM_PIPELINES': {
+        'allris.pipelines.leipzig.FixWebUrlPipeline': 200,
+        'allris.pipelines.leipzig.AddOriginatorPipeline': 300
+    },
     'FEED_FORMAT': 'jsonlines',
+    # 'FEED_URI': 'stdout:'
     'FEED_URI': Path('.') / 'data' / '%(object_type)s_%(time)s.jl'
 }
 
