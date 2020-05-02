@@ -14,7 +14,7 @@ settings = {
     },
     'FEED_FORMAT': 'jsonlines',
     # 'FEED_URI': 'stdout:'
-    'FEED_URI': Path('.') / 'data' / '%(object_type)s_%(time)s.jl'
+    'FEED_URI': Path('.').parent.absolute() / 'data' / '%(object_type)s_%(time)s.jl'
 }
 
 spargs = {
