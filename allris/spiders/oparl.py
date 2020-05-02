@@ -15,7 +15,8 @@ class OparlSpider(scrapy.Spider):
     def __init__(self, name=None, **kwargs):
         if 'since' not in kwargs:
             raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
-        self.since = datetime.fromisoformat(kwargs['since'])
+        fmt_str =  r"%Y-%m-%dT%H:%M:%S" # replaces the fromisoformatm, not available in python 3.6
+        self.since = datetime.strptime(kwargs['since'], fmt_str)
         if 'body_url' not in kwargs:
             raise ValueError('Missing required argument: "body_url". Got arguments: {}'.format(kwargs))
         super(OparlSpider, self).__init__(name, **kwargs)
