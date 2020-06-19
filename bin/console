@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -it --volume="$(pwd):/app" --workdir '/app' scrapy bash
