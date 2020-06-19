@@ -11,6 +11,7 @@ A scraper for [ratsinfo.leipzig.de](https://ratsinfo.leipzig.de/).
 ### Development
 
 * [Python 3.8](https://www.python.org/downloads/)
+* [pyenv](https://github.com/pyenv/pyenv) (optional)
 
 ## Usage
 
