@@ -9,10 +9,8 @@ A scraper for [ratsinfo.leipzig.de](https://ratsinfo.leipzig.de/).
 * [docker](https://docs.docker.com/get-docker/)
 
 ### Development
-* Python 3.6.9
-* pip 9.0.1
-* virtualenv (optional) (https://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
-* virtualenvwrapper (optional)
+
+* [Python 3.8](https://www.python.org/downloads/)
 
 ## Usage
 
@@ -30,7 +28,19 @@ docker run -v $(pwd)/data:/app/data --rm codeforleipzig/allris-scraper
 
 ### Using python
 
-Ensure that all development dependencies are installed, then run:
+It is recommended to use a [virtual environment](https://docs.python.org/3/tutorial/venv.html) in order to isolate libraries used in this project from the environment of your operating system. To do so, run the following in the project directory:
+```
+# create the virtual environment in the project directory; do this once
+python -m venv venv
+
+# activate the environment; do this before working with the scraper
+source venv/bin/activate
+
+# install the required libraries
+pip install -r requirements.txt
+```
+
+To run the scraper using python:
 ```
 python ./leipzig.py
 ```
