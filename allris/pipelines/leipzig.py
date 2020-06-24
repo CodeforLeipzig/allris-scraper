@@ -30,5 +30,5 @@ class AddOriginatorPipeline(object):
 
         logger.info("Found Originator: {}".format(originator))
         item['leipzig:originator'] = originator
-
+hallo
         return item
