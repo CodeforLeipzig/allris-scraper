@@ -3,20 +3,22 @@ import scrapy
 
 logger = logging.getLogger(__name__)
 
+
 class FixWebUrlPipeline(object):
     def process_item(self, item, spider):
-        if item.get('web'):
-            item['web'] = item['web'].replace('N/A', 'https://ratsinfo.leipzig.de/bi/')
+        if item.get("web"):
+            item["web"] = item["web"].replace("N/A", "https://ratsinfo.leipzig.de/bi/")
         return item
+
 
 class AddOriginatorPipeline(object):
     async def process_item(self, item, spider):
-        if item['type'] != 'https://schema.oparl.org/1.0/Paper':
+        if item["type"] != "https://schema.oparl.org/1.0/Paper":
             return item
-        if not item.get('web'):
+        if not item.get("web"):
             return item
 
-        paper_url = item.get('web')
+        paper_url = item.get("web")
         logger.info("Add Originator from: {}".format(paper_url))
 
         request = scrapy.Request(paper_url)
@@ -29,6 +31,6 @@ class AddOriginatorPipeline(object):
         originator = data[1]
 
         logger.info("Found Originator: {}".format(originator))
-        item['leipzig:originator'] = originator
+        item["leipzig:originator"] = originator
 
         return item
