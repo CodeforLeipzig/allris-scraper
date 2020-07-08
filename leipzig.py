@@ -10,7 +10,7 @@ from pathlib import Path
 settings = {
     "HTTPCACHE_ENABLED": True,
     "LOG_LEVEL": "INFO",
-    "CLOSESPIDER_PAGECOUNT": 2,
+    "CLOSESPIDER_PAGECOUNT": 400,
     "ITEM_PIPELINES": {
         "allris.pipelines.leipzig.FixWebUrlPipeline": 200,
         "allris.pipelines.leipzig.AddOriginatorPipeline": 300,
@@ -42,11 +42,14 @@ def download_pdfs():
                 pdf_name = paper_json["mainFile"]["fileName"]
                 pdf_path = Path(f"data/pdfs/{pdf_name}")
                 if not pdf_path.is_file():
+                    print("Processing " + f"data/pdfs/{pdf_name}")
                     pdf_url = paper_json["mainFile"]["accessUrl"]
                     response = re.get(pdf_url)
                     Path("data/pdfs").mkdir(parents=True, exist_ok=True)
                     with open(f"data/pdfs/{pdf_name}", "wb") as f:
+                        print("Writing contents to " + f"data/pdfs/{pdf_name}")
                         f.write(response.content)
+    print("finished!")
 
 
 process = CrawlerProcess(settings)
