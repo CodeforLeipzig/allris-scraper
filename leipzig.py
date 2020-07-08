@@ -6,13 +6,11 @@ from pathlib import Path
 import json
 import requests as re
 from pathlib import Path
-from tika import parser
-import os
 
 settings = {
     "HTTPCACHE_ENABLED": True,
     "LOG_LEVEL": "INFO",
-    "CLOSESPIDER_PAGECOUNT": 2,
+    "CLOSESPIDER_PAGECOUNT": 400,
     "ITEM_PIPELINES": {
         "allris.pipelines.leipzig.FixWebUrlPipeline": 200,
         "allris.pipelines.leipzig.AddOriginatorPipeline": 300,
@@ -44,34 +42,17 @@ def download_pdfs():
                 pdf_name = paper_json["mainFile"]["fileName"]
                 pdf_path = Path(f"data/pdfs/{pdf_name}")
                 if not pdf_path.is_file():
+                    print("Processing " + f"data/pdfs/{pdf_name}")
                     pdf_url = paper_json["mainFile"]["accessUrl"]
                     response = re.get(pdf_url)
                     Path("data/pdfs").mkdir(parents=True, exist_ok=True)
                     with open(f"data/pdfs/{pdf_name}", "wb") as f:
+                        print("Writing contents to " + f"data/pdfs/{pdf_name}")
                         f.write(response.content)
+    print("finished!")
 
 
-def extract_text_from_pdfs_recursively():
-    for root, dirs, files in os.walk("data/pdfs"):
-        for file in files:
-            path_to_pdf = os.path.join(root, file)
-            [stem, ext] = os.path.splitext(path_to_pdf)
-            file_name = stem.split("/")[-1]
-            if ext == ".pdf":
-                print("Processing " + path_to_pdf)
-                pdf_contents = parser.from_file(path_to_pdf)
-                Path("data/txts").mkdir(parents=True, exist_ok=True)
-                path_to_txt = "data/txts/" + file_name + ".txt"
-                with open(path_to_txt, "w") as txt_file:
-                    print("Writing contents to " + path_to_txt)
-                    text = pdf_contents["content"]
-                    txt_file.write(
-                        os.linesep.join([s for s in text.splitlines() if s])
-                    )  # removes empty lines; some lines with just a single white space character still remain, but might be useful for later segmentation?
-
-
-# process = CrawlerProcess(settings)
-# process.crawl(OparlSpider, **spargs)
-# process.start()
-# download_pdfs()
-extract_text_from_pdfs_recursively()
+process = CrawlerProcess(settings)
+process.crawl(OparlSpider, **spargs)
+process.start()
+download_pdfs()
