@@ -7,3 +7,4 @@ venv
 *.sqlite
 .scrapy
 .vscode
+data/
