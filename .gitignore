@@ -4,6 +4,9 @@ __pycache__/
 venv
 *.json
 *.jl
+*.txt
+*.pdf
 *.sqlite
+*.csv
 .scrapy
 .vscode
