@@ -10,3 +10,4 @@ venv
 *.csv
 .scrapy
 .vscode
+data/

@@ -35,19 +35,19 @@ It is recommended to use a [virtual environment](https://docs.python.org/3/tutor
 
 ```
 # create the virtual environment in the project directory; do this once
-python -m venv venv
+python3 -m venv venv
 
 # activate the environment; do this before working with the scraper
 source venv/bin/activate
 
 # install the required libraries
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 To run the scraper using python:
 
 ```
-python ./leipzig.py
+python3 ./leipzig.py
 ```
 
 ### Scraper Output
@@ -73,6 +73,27 @@ From the PDF files, TXT files can be generated with the extract_text_from_pdfs_r
 ### Configuration
 
 Scrapy allows for configuration on various levels. General configuration can be found in `allris/settings.py`. For the purposes of this project, relevant values are overridden in `leipzig.py`. Per default, it is configured towards development needs. Specifically, aggressive caching is enabled (`HTTP_CACHE_ENABLED`) and the number of scraped pages is limited (`CLOSESPIDER_PAGECOUNT`).
+
+### PDF text extraction
+
+*Prerequisite*: leipzig.py scraper has been run and downloaded files to data/pdfs.
+
+Run
+```
+python3 ./txt_extraction.py
+```
+to extract the texts from the PDFs. Files will be created under data/txts.
+
+### CSV
+
+*Prerequisite*: txt_extraction.py has been run.
+
+Run
+```
+python3 ./nlp.py
+```
+to join those text files as rows into a CSV file. That is created as data/data.csv.
+This file can be used for further NLP processing.
 
 ### NLP
 

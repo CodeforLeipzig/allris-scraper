@@ -1,3 +1,5 @@
 scrapy
 scraperwiki
 furl
+pandas
+tika
