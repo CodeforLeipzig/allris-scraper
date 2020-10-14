@@ -29,29 +29,30 @@ spargs = {
 
 # if the paramater jl_file equals "all", the function looks up all .jl files in the data folder and downloads the pdf linked under mainFile/accessUrl. If it is given a .jl file name, it will download all PDF files for that .jl file.
 def download_pdfs(jl_file):
+    def download_pdf(paper):
+        paper_json = json.loads(paper)
+        if not paper_json.get("mainFile") or not paper_json.get("mainFile").get(
+            "accessUrl"
+        ):  # manche von den jsons haben kein pdf als mainFile verlinkt – sollte man es da woanders suchen?
+            return
+        pdf_name = paper_json["mainFile"]["fileName"]
+        pdf_path = Path(f"data/pdfs/{pdf_name}")
+        if not pdf_path.is_file():
+            print("Processing " + f"data/pdfs/{pdf_name}")
+            pdf_url = paper_json["mainFile"]["accessUrl"]
+            response = re.get(pdf_url)
+            Path("data/pdfs").mkdir(parents=True, exist_ok=True)
+            with open(f"data/pdfs/{pdf_name}", "wb") as f:
+                print("Writing contents to " + f"data/pdfs/{pdf_name}")
+                f.write(response.content)
+
     if jl_file == "all":
         pathlist = Path("data/").glob("**/*.jl")
         for path in pathlist:
             jl_file = str(path)
             with open(jl_file, "r") as f:
                 for paper in f:
-                    paper_json = json.loads(paper)
-                    if not paper_json.get("mainFile") or not paper_json.get(
-                        "mainFile"
-                    ).get(
-                        "accessUrl"
-                    ):  # manche von den jsons haben kein pdf als mainFile verlinkt – sollte man es da woanders suchen?
-                        continue
-                    pdf_name = paper_json["mainFile"]["fileName"]
-                    pdf_path = Path(f"data/pdfs/{pdf_name}")
-                    if not pdf_path.is_file():
-                        print("Processing " + f"data/pdfs/{pdf_name}")
-                        pdf_url = paper_json["mainFile"]["accessUrl"]
-                        response = re.get(pdf_url)
-                        Path("data/pdfs").mkdir(parents=True, exist_ok=True)
-                        with open(f"data/pdfs/{pdf_name}", "wb") as f:
-                            print("Writing contents to " + f"data/pdfs/{pdf_name}")
-                            f.write(response.content)
+                    download_pdf(paper)
         print("finished!")
 
     else:
@@ -63,26 +64,7 @@ def download_pdfs(jl_file):
                 with open(str(path), "r") as f:
                     first_file = True
                     for paper in f:
-                        paper_json = json.loads(paper)
-                        if not paper_json.get("mainFile") or not paper_json.get(
-                            "mainFile"
-                        ).get(
-                            "accessUrl"
-                        ):  # manche von den jsons haben kein pdf als mainFile verlinkt – sollte man es da woanders suchen?
-                            continue
-                        pdf_name = paper_json["mainFile"]["fileName"]
-                        pdf_path = Path(f"data/pdfs/{pdf_name}")
-                        if not pdf_path.is_file():
-                            if not first_file:
-                                print("Going to next file..")
-                            first_file = False
-                            print("Processing " + f"data/pdfs/{pdf_name}")
-                            pdf_url = paper_json["mainFile"]["accessUrl"]
-                            response = re.get(pdf_url)
-                            Path("data/pdfs").mkdir(parents=True, exist_ok=True)
-                            with open(f"data/pdfs/{pdf_name}", "wb") as f:
-                                print("Writing contents to " + f"data/pdfs/{pdf_name}")
-                                f.write(response.content)
+                        download_pdf(paper)
                     print("Finished!")
                 break
         # if no .jl has been found that matches the given jl_file parameter:
@@ -95,4 +77,3 @@ def download_pdfs(jl_file):
 process = CrawlerProcess(settings)
 process.crawl(OparlSpider, **spargs)
 process.start()
-download_pdfs("paper_2020-10-07T18-24-21.jl")
