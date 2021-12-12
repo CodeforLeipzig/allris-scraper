@@ -15,10 +15,14 @@ class OparlSpider(scrapy.Spider):
     def __init__(self, name=None, **kwargs):
         if 'domain' in kwargs:
             self.allowed_domains = [kwargs['domain']]
-        if 'since' not in kwargs:
-            raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
-        fmt_str =  r"%Y-%m-%dT%H:%M:%S" # replaces the fromisoformatm, not available in python 3.6
-        self.since = datetime.strptime(kwargs['since'], fmt_str)
+        if 'page' not in kwargs:
+            raise ValueError('Missing required argument: "page". Got arguments: {}'.format(kwargs))
+        #if 'since' not in kwargs:
+        #    raise ValueError('Missing required argument: "since". Got arguments: {}'.format(kwargs))
+        #fmt_str =  r"%Y-%m-%dT%H:%M:%S" # replaces the fromisoformatm, not available in python 3.6
+        #self.since = datetime.strptime(kwargs['since'], fmt_str)
+        self.page = kwargs['page']
+        self.first = True
         if 'body_url' not in kwargs:
             raise ValueError('Missing required argument: "body_url". Got arguments: {}'.format(kwargs))
         super(OparlSpider, self).__init__(name, **kwargs)
@@ -34,6 +38,7 @@ class OparlSpider(scrapy.Spider):
             raise ValueError('Not a document of type Body: {}'.format(response.url))
 
         list_url = self.fix_url(document[self.object_type])
+        print("list_url ", list_url)
         yield scrapy.Request(url=list_url, callback=self.parse_list)
 
     def parse_list(self, response):
@@ -44,12 +49,16 @@ class OparlSpider(scrapy.Spider):
             yield item
 
         next_url = document['links'].get('next')
+        print("next_url ", next_url)
         if next_url is not None:
-            next_url = self.fix_url(next_url)
+            #next_url = self.fix_url(next_url)
+            self.first = False
             yield scrapy.Request(url=next_url, callback=self.parse_list)
 
     # append modified_since parameter; pagination links fail to include it
     def fix_url(self, url):
         fixed = furl(url)
-        fixed.args['modified_since'] = self.since
+        #fixed.args['modified_since'] = self.since
+        if self.first:
+            fixed.args['p'] = self.page
         return str(fixed)
