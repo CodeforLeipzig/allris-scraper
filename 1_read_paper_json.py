@@ -12,16 +12,16 @@ settings = {
         "allris.pipelines.leipzig.FixWebUrlPipeline": 200,
         "allris.pipelines.leipzig.AddOriginatorPipeline": 300,
     },
-    "FEED_FORMAT": "jsonlines",
-    # 'FEED_URI': 'stdout:'
-    "FEED_URI": Path(".").parent.absolute() / "data" / "%(object_type)s_%(time)s.jl",
+    "FEEDS": {
+        Path(".").parent.absolute() / "data" / "%(object_type)s_%(time)s.jl": {"format": "jsonlines"},
+    },
 }
 
 spargs = {
-    "body_url": "https://ratsinfo.leipzig.de/bi/oparl/1.0/bodies.asp?id=2387",
-    "allowed_domains": ["ratsinfo.leipzig.de"],
+    "body_url": "https://ratsinformation.leipzig.de/allris_leipzig_public/oparl/bodies?id=2387",
+    "allowed_domains": ["ratsinformation.leipzig.de"],
     "object_type": "paper",
-    "since": "2020-12-12T00:00:00",
+    "since": "2023-03-01T00:00:00",
     "page": "46"
 }
 

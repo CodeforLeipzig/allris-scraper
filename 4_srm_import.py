@@ -16,8 +16,11 @@ def read_jls_and_txts_into_json():
                 body = "Leipzig"#j_content['body']
                 if 'mainFile' in j_content:
                     fileName = j_content['mainFile']['fileName'][:-4]
-                    with open('data/txts/{}.txt'.format(fileName), 'r') as file:
-                        content = file.read()
+                    try:
+                        with open('data/txts/{}.txt'.format(fileName), 'r') as file:
+                            content = file.read()
+                    except:
+                        content = '<data/txts/{}.txt not found>'.format(fileName)    
                 else:
                     content = "<empty>"
                 name = j_content['name']
@@ -41,7 +44,7 @@ def read_jls_and_txts_into_json():
                 #print("reference ", reference)
                 print("url ", url)
 
-                paperdict = {} 
+                paperdict = {}
                 paperdict["body"] = body
                 paperdict["content"] = content
                 paperdict["name"] = name

@@ -34,7 +34,7 @@ class OparlSpider(scrapy.Spider):
         self.logger.info("Parsing Body: %s" % response.url)
         document = json.loads(response.text)
 
-        if not document.get('type') == 'https://schema.oparl.org/1.0/Body':
+        if not document.get('type') == 'https://schema.oparl.org/1.1/Body':
             raise ValueError('Not a document of type Body: {}'.format(response.url))
 
         list_url = self.fix_url(document[self.object_type])
