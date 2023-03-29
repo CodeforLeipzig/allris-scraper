@@ -6,13 +6,13 @@ import re
 
 class MeetingsSpider(scrapy.Spider):
     name = "meetings"
-    allowed_domains = ["ratsinfo.leipzig.de"]
+    allowed_domains = ["ratsinformation.leipzig.de"]
 
     def start_requests(self):
         url = getattr(
             self,
             "start_url",
-            "https://ratsinfo.leipzig.de/bi/oparl/1.0/meetings.asp?organization=2387",
+            "https://ratsinformation.leipzig.de/allris_leipzig_public/oparl/meetings?body=2387",
         )
         yield scrapy.Request(url=url, callback=self.parse)
 

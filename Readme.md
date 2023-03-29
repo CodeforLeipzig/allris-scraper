@@ -47,7 +47,10 @@ pip3 install -r requirements.txt
 To run the scraper using python:
 
 ```
-python3 ./leipzig.py
+python3 ./1_read_paper_json.py
+python3 ./2_download_pdfs.py
+python3 ./3_txt_extraction.py
+python3 ./4_srm_import.py
 ```
 
 ### Scraper Output

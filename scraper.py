@@ -19,7 +19,7 @@ def spider_closed(spider, reason):
     scraperwiki.sql.save_var('last_url', last_url)
 
 def get_start_url():
-    start_url = 'https://ratsinfo.leipzig.de/bi/oparl/1.0/meetings.asp?body=2387&p=100'        
+    start_url = 'https://ratsinformation.leipzig.de/allris_leipzig_public/oparl/meetings?body=2387&p=100'        
     start_url = os.getenv('MORPH_START_URL') or scraperwiki.sql.get_var('last_url')
     return start_url
 

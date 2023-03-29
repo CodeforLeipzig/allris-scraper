@@ -3,3 +3,4 @@ scraperwiki
 furl
 pandas
 tika
+simplejson

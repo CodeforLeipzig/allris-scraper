@@ -3,4 +3,9 @@
 *
 !requirements.txt
 !allris
-!leipzig.py
+!1_read_paper_json.py
+!2_download_pdfs.py
+!3_txt_extraction.py
+!4_srm_import.py
+!nlp.py
+!scraper.py

@@ -5,8 +5,8 @@ import re
 
 class PapersSpider(scrapy.Spider):
     name = 'papers'
-    allowed_domains = ['ratsinfo.leipzig.de']
-    start_urls = ['https://ratsinfo.leipzig.de/bi/oparl/1.0/papers.asp?body=2387']
+    allowed_domains = ['ratsinformation.leipzig.de']
+    start_urls = ['https://ratsinformation.leipzig.de/allris_leipzig_public/oparl/papers?body=2387']
 
     # limit the number of scraped pages for now
     custom_settings = {
