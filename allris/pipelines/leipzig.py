@@ -22,13 +22,13 @@ class AddOriginatorPipeline(object):
         logger.info("Add Originator from: {}".format(paper_url))
 
         request = scrapy.Request(paper_url)
-        response = await spider.crawler.engine.download(request, spider)
+        response = await spider.crawler.engine.download(request)
         if response.status != 200:
             return item
 
-        xpath = '//td[@class="ko1"]/table[@class="tk1"]/tr[descendant::td[contains(.,"Einreicher:")]]/td/text()'
+        xpath = "//span[@id='voverfasser1']/text()"
         data = response.xpath(xpath).getall()
-        originator = data[1]
+        originator = data[0]
 
         logger.info("Found Originator: {}".format(originator))
         item["leipzig:originator"] = originator
