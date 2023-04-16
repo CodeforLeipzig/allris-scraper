@@ -21,8 +21,10 @@ spargs = {
     "body_url": "https://ratsinformation.leipzig.de/allris_leipzig_public/oparl/bodies?id=2387",
     "allowed_domains": ["ratsinformation.leipzig.de"],
     "object_type": "paper",
-    "since": "2023-03-01T00:00:00",
-    "page": "46"
+    "modified_from": "2023-03-29T00:00:00",
+    "modified_to": "2023-04-17T00:00:00",
+    "page_from": "1",
+    "page_to": "10"
 }
 
 process = CrawlerProcess(settings)
