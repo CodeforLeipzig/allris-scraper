@@ -11,7 +11,7 @@ class OparlSpider(scrapy.Spider):
     allowed_domains = []
     body_url = ''
     object_type = ''
-    fmt_str =  r"%Y-%m-%dT%H:%M:%S" # replaces the fromisoformatm, not available in python 3.6
+    fmt_str =  r"%Y-%m-%d" # replaces the fromisoformatm, not available in python 3.6
 
     def __init__(self, name=None, **kwargs):
         if 'domain' in kwargs:
@@ -50,16 +50,19 @@ class OparlSpider(scrapy.Spider):
         document = json.loads(response.text)
 
         for item in document['data']:
-            item_modified = item['modified']
+            item_modified = item['date'] if 'date' in item else None
             if item_modified is not None:
                 item_modified_parsed = datetime.strptime(item_modified.split("+")[0], self.fmt_str)
                 if item_modified_parsed < datetime.strptime(self.modified_from, self.fmt_str):
-                    print("stopping at date {} < modified_from {}".format(item_modified, self.modified_from))
-                    return
+                    print("skipping at date {} < modified_from {}".format(item_modified, self.modified_from))
+                else:    
+                    yield item
                 if self.modified_to is not None and item_modified_parsed > datetime.strptime(self.modified_to, self.fmt_str):
-                    print("stopping at date {} > modified_to {}".format(item_modified, self.modified_to))
-                    return
-            yield item
+                    print("skipping at date {} > modified_to {}".format(item_modified, self.modified_to))
+                else:    
+                    yield item
+            else:    
+                yield item
 
         next_url = document['links'].get('next')
 

@@ -30,7 +30,7 @@ def read_jls_and_txts_into_json():
                 else:
                     originator = 'Unbekannt'
                 paper_type = j_content['paperType']
-                published_at = j_content['created']
+                published_at = j_content['date']
                 reference = j_content['reference']
                 url = j_content['web']
 

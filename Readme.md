@@ -47,7 +47,7 @@ pip3 install -r requirements.txt
 To run the scraper using python:
 
 ```
-python3 ./1_read_paper_json.py --page_from 1 --page_to 1000 --modified_to 2023-04-19T00:00:00 --modified_from 2020-09-28T00:00:00
+python3 ./1_read_paper_json.py --page_from 1 --page_to 1000 --modified_to 2023-04-27 --modified_from 2023-04-19
 python3 ./2_download_pdfs.py
 python3 ./3_txt_extraction.py
 python3 ./4_srm_import.py
