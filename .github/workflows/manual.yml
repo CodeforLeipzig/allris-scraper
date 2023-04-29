@@ -23,6 +23,7 @@ jobs:
   scrape-papers:
     name: Scraper paper content
     runs-on: ubuntu-latest
+    environment: scrape_papers_envs
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -45,3 +46,12 @@ jobs:
           name: import-json
           path: input.json
           retention-days: 1
+      - uses: Dylan700/sftp-upload-action@latest
+        with:
+        server: ${{ secrets.FTP_URL }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        uploads: |
+          ./ => ./
+        ignore: |
+          !input.json
