@@ -1,0 +1,43 @@
+name: Cron execution
+on:
+  schedule:
+    - cron: '30 19 * * *'  
+
+jobs:
+  scrape-papers:
+    name: Scraper paper content
+    runs-on: ubuntu-latest
+    environment: scrape_papers_envs
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install deps
+        run: pip install -r requirements.txt    
+      - name: Download paper JSONs
+        run: python3 ./1_read_paper_json.py --page_from 1 --page_to 20 --modified_to $(date -d '+1 day' '+%Y-%m-%d') --modified_from $(date -d '-1 day' '+%Y-%m-%d')
+      - name: Download PDFs from URL contained main file field in paper JSON data entries
+        run: python3 ./2_download_pdfs.py
+      - name: Extract text from PDF files (and put it in a txt file for each PDF)
+        run: python3 ./3_txt_extraction.py
+      - name: Concat import JSON file from the contents of the paper JSONs and the extracted text content
+        run: python3 ./4_srm_import.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: import-json
+          path: input.json
+          retention-days: 1
+      - uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ secrets.FTP_URL }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          uploads: |
+            ./ => ./
+          ignore: |
+            !input.json
+      - name: Trigger import
+        run: curl -X POST ${{ secrets.IMPORT_URL }}
