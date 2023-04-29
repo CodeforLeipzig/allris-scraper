@@ -48,10 +48,10 @@ jobs:
           retention-days: 1
       - uses: Dylan700/sftp-upload-action@latest
         with:
-        server: ${{ secrets.FTP_URL }}
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        uploads: |
-          ./ => ./
-        ignore: |
-          !input.json
+          server: ${{ secrets.FTP_URL }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          uploads: |
+            ./ => ./
+          ignore: |
+            !input.json
