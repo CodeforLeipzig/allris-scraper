@@ -49,25 +49,35 @@ class OparlSpider(scrapy.Spider):
         self.logger.info("Parsing Object List: %s" % response.url)
         document = json.loads(response.text)
 
+        totalItemCount = 0
+        processedItemCount = 0
+
         for item in document['data']:
+            totalItemCount += 1
             item_modified = item['date'] if 'date' in item else None
             if item_modified is not None:
                 item_modified_parsed = datetime.strptime(item_modified.split("+")[0], self.fmt_str)
                 if item_modified_parsed < datetime.strptime(self.modified_from, self.fmt_str):
                     print("skipping at date {} < modified_from {}".format(item_modified, self.modified_from))
                 else:    
-                    yield item
-                if self.modified_to is not None and item_modified_parsed > datetime.strptime(self.modified_to, self.fmt_str):
-                    print("skipping at date {} > modified_to {}".format(item_modified, self.modified_to))
-                else:    
-                    yield item
-            else:    
-                yield item
+                    if self.modified_to is not None and item_modified_parsed > datetime.strptime(self.modified_to, self.fmt_str):
+                        print("skipping at date {} > modified_to {}".format(item_modified, self.modified_to))
+                    else:    
+                        processedItemCount += 1
+                        yield item
+            else:
+                print("item has no field date, thus skipping")
+           
 
         next_url = document['links'].get('next')
 
         fixed = furl(next_url)
         next_page = fixed.args['page']
+
+        if processedItemCount == 0:
+            print("stopping before page {} as nothing processed at the current page".format(next_page))
+            return 
+
         if int(next_page) < int(self.page_from):
             print("stopping at page {} < page_from {}".format(next_page, self.page_from))
             return 
