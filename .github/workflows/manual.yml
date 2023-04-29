@@ -55,3 +55,5 @@ jobs:
             ./ => ./
           ignore: |
             !input.json
+      - name: Trigger import
+        run: curl -X POST ${{ secrets.IMPORT_URL }}
