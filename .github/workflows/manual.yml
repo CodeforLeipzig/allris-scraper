@@ -56,4 +56,4 @@ jobs:
           ignore: |
             !input.json
       - name: Trigger import
-        run: curl --write-out '%{http_code}' --silent --output /dev/null -X POST ${{ secrets.IMPORT_URL }}
+        run: curl --write-out '%{http_code}' --silent --output /dev/null -X POST ${{ secrets.IMPORT_URL }}?secret=${{ secrets.SHARED_IMPORT_SECRET }}
