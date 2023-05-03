@@ -31,9 +31,8 @@ try:
         content = file.read()
         summary = openai_summarizer.summarize_text(content)
         Path("data/summaries").mkdir(parents=True, exist_ok=True)
-        path_to_txt = "data/summaries/" + file_name + ".txt"
+        path_to_txt = "data/summaries/" + file_name
         with open(path_to_txt, "w") as txt_file:
-            txt_file.write()
-        print(summary)
+            txt_file.write(summary)
 except:
     content = '{}.txt not found>'.format(file_name)    
