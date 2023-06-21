@@ -17,7 +17,8 @@ jobs:
       uses: actions/checkout@v1
     - name: Docker
       run: docker-compose -f "docker/location-locator.yml" up -d --build
-    - uses: iFaxity/wait-on-action
+    - name: Wait on
+      uses: iFaxity/wait-on-action@v1.1.0
       with:
         resource: http://localhost:8081      
     - name: Extract
