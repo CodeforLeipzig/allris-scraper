@@ -15,8 +15,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Docker
-      run: docker-compose -f "docker/location-locator.yml" up -d --build
+    - name: DockerExtractor
+      run: docker-compose -f "docker/location-extractor.yml" up -d --build
     - name: Wait on
       uses: iFaxity/wait-on-action@v1.1.0
       with:
@@ -25,6 +25,19 @@ jobs:
       run: |
         extracted = $(curl --location 'http://localhost:8081/api/address/extract' --header 'Content-Type: text/plain' --data '${{ github.event.inputs.text_to_be_geolocate }}')
         echo "extracted=$extracted" >> $GITHUB_OUTPUT 
-    - name: "echo output"
+    - name: "echo location"
       run: |
-        echo "Output [${{steps.Extract.outputs.extracted}}]"      
+        echo "Output [${{steps.Extract.outputs.extracted}}]"
+    - name: DockerLocator
+      run: docker-compose -f "docker/location-locator.yml" up -d --build
+    - name: Wait on
+      uses: iFaxity/wait-on-action@v1.1.0
+      with:
+        resource: http://localhost:8082 
+    - name: Locate
+      run: |
+        located = $(curl --location 'http://localhost:8082/api/locations/locate?location=S%C3%BCdplatz')
+        echo "located=$located" >> $GITHUB_OUTPUT 
+    - name: "echo coords"
+      run: |
+        echo "Output [${{steps.Locate.outputs.located}}]"
