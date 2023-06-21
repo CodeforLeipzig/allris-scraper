@@ -4,3 +4,5 @@ furl
 pandas
 tika
 simplejson
+spacy
+openai_summarize

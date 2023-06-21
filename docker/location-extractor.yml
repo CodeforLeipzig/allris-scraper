@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  extractor:
+    image: sannsie/locations-extractor:latest
+    ports:
+      - 8081:8081

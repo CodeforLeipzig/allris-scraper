@@ -107,3 +107,6 @@ nlp.py provides a method read_txts_into_dataframe() to read all TXT files in `da
 #### Topic Modeling
 
 To make the obtained documents more accessible for users interested in certain topics, a topic modeling has been run on the extracted documents with the R software [tidyToPān](https://zenodo.org/badge/latestdoi/233335696). The obtained model will be used later on for e.g. a search function.
+
+
+`python -m spacy download de_core_news_sm`

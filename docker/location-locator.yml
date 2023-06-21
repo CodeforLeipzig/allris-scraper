@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  locator:
+    image: sannsie/locations-locator:latest
+    #build: .
+    depends_on:
+      - nominatim
+    ports:
+      - 8082:8082
+
+  nominatim:
+    image: mediagis/nominatim:4.2
+    environment:
+    - PBF_URL=https://download.bbbike.org/osm/bbbike/Leipzig/Leipzig.osm.pbf
+    ports:
+      - 8083:8080
