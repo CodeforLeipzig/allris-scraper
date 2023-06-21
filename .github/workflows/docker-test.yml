@@ -1,4 +1,4 @@
-name: Manual execution
+name: Manual docker execution
 on: 
   workflow_dispatch:
     inputs:
@@ -19,7 +19,7 @@ jobs:
       run: docker-compose -f "docker/location-locator.yml" up -d --build
     - name: Extract
       run: |
-        extracted = $(curl --location 'http://localhost:8081/api/address/extract' --header 'Content-Type: text/plain' --data ${{ github.event.inputs.text_to_be_geolocate }})
+        extracted = $(curl --location 'http://localhost:8081/api/address/extract' --header 'Content-Type: text/plain' --data '${{ github.event.inputs.text_to_be_geolocate }}')
         echo "extracted=$extracted" >> $GITHUB_OUTPUT 
     - name: "echo output"
       run: |
