@@ -24,11 +24,10 @@ jobs:
         timeout: 30000
     - name: Extract
       run: |
-        extracted = $(curl --location 'http://localhost:8081/api/address/extract' --header 'Content-Type: text/plain' --data '${{ github.event.inputs.text_to_be_geolocate }}')
-        echo "extracted=$extracted" >> $GITHUB_OUTPUT 
+        echo "EXTRACTED=$(curl --location 'http://localhost:8081/api/address/extract' --header 'Content-Type: text/plain' --data '${{ github.event.inputs.text_to_be_geolocate }}')" >> $GITHUB_ENV
     - name: "echo location"
       run: |
-        echo "Output [${{steps.Extract.outputs.extracted}}]"
+        echo "Output ${{ env.EXTRACTED }}"
     - name: DockerLocator
       run: docker-compose -f "docker/location-locator.yml" up -d --build
     - name: Wait on
@@ -38,8 +37,7 @@ jobs:
         timeout: 30000
     - name: Locate
       run: |
-        located = $(curl --location 'http://localhost:8082/api/locations/locate?location=S%C3%BCdplatz')
-        echo "located=$located" >> $GITHUB_OUTPUT 
+        echo "LOCATED=$(curl --location 'http://localhost:8082/api/locations/locate?location=S%C3%BCdplatz')" >> $GITHUB_ENV
     - name: "echo coords"
       run: |
-        echo "Output [${{steps.Locate.outputs.located}}]"
+        echo "Output ${{ env.LOCATED }}"
