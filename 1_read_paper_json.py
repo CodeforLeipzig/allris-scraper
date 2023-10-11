@@ -91,6 +91,6 @@ crawler = process.create_crawler(OparlSpider)
 process.crawl(crawler, **spargs)
 process.start()
 
-failed = crawler.stats.get_value('custom/failed_job')
+failed = crawler.stats.get_value('log_count/ERROR')
 if failed:
     sys.exit(1)
