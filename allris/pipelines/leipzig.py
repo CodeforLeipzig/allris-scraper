@@ -26,11 +26,14 @@ class AddOriginatorPipeline(object):
         if response.status != 200:
             return item
 
-        xpath = "//span[@id='voverfasser1']/text()"
+        xpath = "//span[@id='vofamt']/text()"
         data = response.xpath(xpath).getall()
-        originator = data[0]
-
-        logger.info("Found Originator: {}".format(originator))
-        item["leipzig:originator"] = originator
+        if data != null and length(data) > 0:
+            originator = data[0]
+            logger.info("Found Originator: {}".format(originator))
+            item["leipzig:originator"] = originator
+        else:
+            logger.info("Found no originator")
+            item["leipzig:originator"] = "Unbekannt"
 
         return item
