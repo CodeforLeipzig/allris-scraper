@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 import datetime
 import scrapy
@@ -88,3 +89,7 @@ for entry in params:
 process = CrawlerProcess(settings)
 process.crawl(OparlSpider, **spargs)
 process.start()
+
+failed = process.stats.get_value('custom/failed_job')
+if failed:
+    sys.exit(1)
