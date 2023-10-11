@@ -87,9 +87,10 @@ for entry in params:
 
 
 process = CrawlerProcess(settings)
-process.crawl(OparlSpider, **spargs)
+crawler = process.create_crawler(OparlSpider)
+process.crawl(crawler, **spargs)
 process.start()
 
-failed = process.stats.get_value('custom/failed_job')
+failed = crawler.stats.get_value('custom/failed_job')
 if failed:
     sys.exit(1)
