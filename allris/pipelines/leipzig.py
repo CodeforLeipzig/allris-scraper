@@ -28,7 +28,7 @@ class AddOriginatorPipeline(object):
 
         xpath = "//span[@id='vofamt']/text()"
         data = response.xpath(xpath).getall()
-        if data != null and length(data) > 0:
+        if data is not None and len(data) > 0:
             originator = data[0]
             logger.info("Found Originator: {}".format(originator))
             item["leipzig:originator"] = originator
