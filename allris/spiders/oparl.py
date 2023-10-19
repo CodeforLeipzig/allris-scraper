@@ -3,7 +3,8 @@ import scrapy
 import json
 from furl import furl
 from datetime import datetime
-from urllib.parse import urlparse, parse_qs
+
+
 class OparlSpider(scrapy.Spider):
     name = 'oparl'
 
@@ -11,7 +12,7 @@ class OparlSpider(scrapy.Spider):
     allowed_domains = []
     body_url = ''
     object_type = ''
-    fmt_str =  r"%Y-%m-%d" # replaces the fromisoformatm, not available in python 3.6
+    fmt_str = r"%Y-%m-%d"  # replaces the fromisoformatm, not available in python 3.6
 
     def __init__(self, name=None, **kwargs):
         if 'domain' in kwargs:
@@ -42,50 +43,51 @@ class OparlSpider(scrapy.Spider):
             raise ValueError('Not a document of type Body: {}'.format(response.url))
 
         list_url = self.fix_url(document[self.object_type])
-        print("list_url ", list_url)
+        self.logger.info("list_url ", list_url)
         yield scrapy.Request(url=list_url, callback=self.parse_list)
 
     def parse_list(self, response):
         self.logger.info("Parsing Object List: %s" % response.url)
         document = json.loads(response.text)
 
-        totalItemCount = 0
-        processedItemCount = 0
+        total_item_count = 0
+        processed_item_count = 0
 
         for item in document['data']:
-            totalItemCount += 1
+            total_item_count += 1
             item_modified = item['date'] if 'date' in item else None
             if item_modified is not None:
                 item_modified_parsed = datetime.strptime(item_modified.split("+")[0], self.fmt_str)
                 if item_modified_parsed < datetime.strptime(self.modified_from, self.fmt_str):
-                    print("skipping at date {} < modified_from {}".format(item_modified, self.modified_from))
-                else:    
-                    if self.modified_to is not None and item_modified_parsed > datetime.strptime(self.modified_to, self.fmt_str):
-                        print("skipping at date {} > modified_to {}".format(item_modified, self.modified_to))
-                    else:    
-                        processedItemCount += 1
+                    self.logger.info("skipping at date {} < modified_from {}".format(item_modified, self.modified_from))
+                else:
+                    if self.modified_to is not None and item_modified_parsed > datetime.strptime(self.modified_to,
+                                                                                                 self.fmt_str):
+                        self.logger.info("skipping at date {} > modified_to {}".format(item_modified, self.modified_to))
+                    else:
+                        processed_item_count += 1
                         yield item
             else:
-                print("item has no field date, thus skipping")
-           
+                self.logger.info("item has no field date, thus skipping")
 
         next_url = document['links'].get('next')
+        self.logger.info("next_url ", next_url)
 
         fixed = furl(next_url)
         next_page = fixed.args['page']
+        self.logger.info("next_page ", next_page)
 
-        if processedItemCount == 0:
-            print("stopping before page {} as nothing processed at the current page".format(next_page))
-            return 
+        if processed_item_count == 0:
+            self.logger.info("stopping before page {} as nothing processed at the current page".format(next_page))
+            return
 
         if int(next_page) < int(self.page_from):
-            print("stopping at page {} < page_from {}".format(next_page, self.page_from))
-            return 
+            self.logger.info("stopping at page {} < page_from {}".format(next_page, self.page_from))
+            return
         if self.page_to is not None and int(next_page) > int(self.page_to):
-            print("stopping at page {} > page_to {}".format(next_page, self.page_to))
-            return 
+            self.logger.info("stopping at page {} > page_to {}".format(next_page, self.page_to))
+            return
 
-        print("next_url ", next_url)
         if next_url is not None:
             self.first = False
             yield scrapy.Request(url=next_url, callback=self.parse_list)
