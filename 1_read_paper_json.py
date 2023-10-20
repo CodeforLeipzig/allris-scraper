@@ -2,11 +2,16 @@ import os
 import sys
 import argparse
 import datetime
-import scrapy
-import scrapy.signals
 from scrapy.crawler import CrawlerProcess
 from allris.spiders.oparl import OparlSpider
 from pathlib import Path
+
+
+def output_file_name():
+    now = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
+    name = "{}_{}.jl".format("paper", now)
+    return name
+
 
 settings = {
     "HTTPCACHE_ENABLED": True,
@@ -17,7 +22,9 @@ settings = {
         "allris.pipelines.leipzig.AddOriginatorPipeline": 300,
     },
     "FEEDS": {
-        Path(".").parent.absolute() / "data" / "%(object_type)s_%(time)s.jl": {"format": "jsonlines"},
+        Path(".").parent.absolute() / "data" / output_file_name(): {
+            "format": "jsonlines"
+        },
     },
 }
 
@@ -91,6 +98,7 @@ crawler = process.create_crawler(OparlSpider)
 process.crawl(crawler, **spargs)
 process.start()
 
-failed = crawler.stats.get_value('log_count/ERROR')
-if failed:
-    sys.exit(1)
+if crawler.stats:
+    failed = crawler.stats.get_value('log_count/ERROR')
+    if failed:
+        sys.exit(1)

@@ -43,7 +43,7 @@ class OparlSpider(scrapy.Spider):
             raise ValueError('Not a document of type Body: {}'.format(response.url))
 
         list_url = self.fix_url(document[self.object_type])
-        self.logger.info("list_url ", list_url)
+        self.logger.info("list_url {}".format(list_url))
         yield scrapy.Request(url=list_url, callback=self.parse_list)
 
     def parse_list(self, response):
@@ -71,11 +71,11 @@ class OparlSpider(scrapy.Spider):
                 self.logger.info("item has no field date, thus skipping")
 
         next_url = document['links'].get('next')
-        self.logger.info("next_url ", next_url)
+        self.logger.info("next_url {}".format(next_url))
 
         fixed = furl(next_url)
         next_page = fixed.args['page']
-        self.logger.info("next_page ", next_page)
+        self.logger.info("next_page {}".format(next_page))
 
         if processed_item_count == 0:
             self.logger.info("stopping before page {} as nothing processed at the current page".format(next_page))
