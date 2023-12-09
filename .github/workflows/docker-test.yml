@@ -14,7 +14,7 @@ jobs:
     environment: scrape_papers_envs
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: DockerExtractor
       run: docker-compose -f "docker/location-extractor.yml" up -d --build
     - name: Wait on
