@@ -18,7 +18,7 @@ jobs:
     - name: DockerExtractor
       run: docker-compose -f "docker/location-extractor.yml" up -d --build
     - name: Wait on
-      uses: iFaxity/wait-on-action@v1.1.0
+      uses: iFaxity/wait-on-action@v1.2.1
       with:
         resource: http://localhost:8081      
         timeout: 30000
@@ -31,7 +31,7 @@ jobs:
     - name: DockerLocator
       run: docker-compose -f "docker/location-locator.yml" up -d --build
     - name: Wait on
-      uses: iFaxity/wait-on-action@v1.1.0
+      uses: iFaxity/wait-on-action@v1.2.1
       with:
         resource: http://localhost:8082 
         timeout: 30000
