@@ -46,14 +46,13 @@ jobs:
           name: import-json
           path: input.json
           retention-days: 1
-      - uses: Dylan700/sftp-upload-action@latest
+      - uses: eiserv/easySFTP@v3
         with:
-          server: ${{ secrets.FTP_URL }}
+          host: ${{ secrets.FTP_URL }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          uploads: |
-            ./ => ./
-          ignore: |
-            !input.json
+          host-key: ${{ secrets.FTP_HOST_KEY }}
+          source: input.json
+          target: ./
       - name: Trigger import
         run: curl --write-out '%{http_code}' --silent --output /dev/null -X POST ${{ secrets.IMPORT_URL }}?secret=${{ secrets.SHARED_IMPORT_SECRET }}
